@@ -1,0 +1,929 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Flotek — Leadership & Culture Survey</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+<style>
+  :root {
+    --plum: #3B1B3E;
+    --plum-deep: #2A1230;
+    --plum-soft: #5A2E5F;
+    --gold: #C9A24A;
+    --gold-soft: #E4C77A;
+    --bone: #F7F4EE;
+    --paper: #FFFFFF;
+    --ink: #1B1120;
+    --muted: #6B5F70;
+    --line: #E8E1DA;
+    --green: #4CA05A;
+    --green-soft: #DCEBDD;
+    --blue: #3E7BC4;
+    --blue-soft: #D6E3F3;
+    --orange: #D68F3E;
+    --orange-soft: #F6E4C9;
+    --red: #C7463D;
+    --red-soft: #F3D2CE;
+    --shadow: 0 1px 2px rgba(30,17,32,.05), 0 8px 24px rgba(30,17,32,.06);
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+    background: var(--bone);
+    color: var(--ink);
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: 780px; margin: 0 auto; padding: 32px 20px 80px; }
+
+  header.hero {
+    background: linear-gradient(135deg, var(--plum) 0%, var(--plum-deep) 100%);
+    color: #fff;
+    padding: 40px 32px;
+    border-radius: 16px;
+    margin-bottom: 24px;
+    box-shadow: var(--shadow);
+    position: relative;
+    overflow: hidden;
+  }
+  header.hero::after {
+    content: '';
+    position: absolute;
+    right: -60px; top: -60px;
+    width: 220px; height: 220px;
+    background: radial-gradient(circle, var(--gold-soft) 0%, transparent 70%);
+    opacity: .12;
+  }
+  .eyebrow {
+    font-size: 11px;
+    letter-spacing: .18em;
+    text-transform: uppercase;
+    color: var(--gold-soft);
+    font-weight: 600;
+    margin-bottom: 12px;
+  }
+  header h1 {
+    font-size: 32px;
+    margin: 0 0 12px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+  }
+  header p {
+    margin: 0;
+    color: rgba(255,255,255,.82);
+    font-size: 15px;
+    max-width: 560px;
+  }
+
+  .card {
+    background: var(--paper);
+    border-radius: 14px;
+    padding: 28px;
+    margin-bottom: 18px;
+    box-shadow: var(--shadow);
+    border: 1px solid var(--line);
+  }
+  .card h2 {
+    font-size: 13px;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: var(--plum);
+    margin: 0 0 4px;
+    font-weight: 700;
+  }
+  .card h2 .num {
+    color: var(--gold);
+    font-weight: 800;
+    margin-right: 8px;
+  }
+  .card .sub {
+    color: var(--muted);
+    font-size: 14px;
+    margin: 0 0 20px;
+  }
+
+  .q { margin-bottom: 22px; }
+  .q:last-child { margin-bottom: 0; }
+  .q .label {
+    font-weight: 600;
+    color: var(--ink);
+    font-size: 15px;
+    margin-bottom: 10px;
+    display: block;
+  }
+  .q .label .badge {
+    display: inline-block;
+    background: var(--plum);
+    color: #fff;
+    font-size: 11px;
+    padding: 2px 8px;
+    border-radius: 6px;
+    margin-right: 8px;
+    font-weight: 700;
+    letter-spacing: .04em;
+    vertical-align: middle;
+  }
+  .q .hint {
+    font-size: 13px;
+    color: var(--muted);
+    margin-top: -4px;
+    margin-bottom: 10px;
+  }
+
+  /* Scale row */
+  .scale {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 6px;
+    margin-top: 8px;
+  }
+  .scale label {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 12px 4px;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 12px;
+    color: var(--muted);
+    text-align: center;
+    background: #fff;
+    transition: all .15s ease;
+  }
+  .scale label:hover { border-color: var(--plum-soft); }
+  .scale label input { display: none; }
+  .scale label .n {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--ink);
+    margin-bottom: 2px;
+  }
+  .scale label.checked {
+    background: var(--plum);
+    border-color: var(--plum);
+    color: rgba(255,255,255,.85);
+  }
+  .scale label.checked .n { color: #fff; }
+
+  /* Radio / checkbox chips */
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; }
+  .chip {
+    padding: 10px 16px;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    cursor: pointer;
+    font-size: 14px;
+    background: #fff;
+    color: var(--ink);
+    font-weight: 500;
+    transition: all .15s ease;
+  }
+  .chip:hover { border-color: var(--plum-soft); }
+  .chip input { display: none; }
+  .chip.checked {
+    background: var(--plum);
+    color: #fff;
+    border-color: var(--plum);
+  }
+
+  input[type="text"], textarea {
+    width: 100%;
+    padding: 12px 14px;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    font-family: inherit;
+    font-size: 14px;
+    background: #fff;
+    resize: vertical;
+    color: var(--ink);
+  }
+  input[type="text"]:focus, textarea:focus {
+    outline: none;
+    border-color: var(--plum-soft);
+    box-shadow: 0 0 0 3px rgba(90,46,95,.12);
+  }
+  textarea { min-height: 80px; }
+
+  /* Four-box interactive */
+  .fourbox-wrap {
+    display: grid;
+    grid-template-columns: 40px 1fr;
+    grid-template-rows: 1fr 40px;
+    gap: 8px;
+    margin-top: 8px;
+    max-width: 520px;
+  }
+  .axis-y {
+    writing-mode: vertical-rl;
+    transform: rotate(180deg);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 11px;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    font-weight: 700;
+    color: var(--plum);
+  }
+  .axis-y span:first-child { color: var(--green); }
+  .axis-y span:last-child { color: var(--red); }
+  .axis-y .title {
+    color: var(--plum);
+    font-size: 13px;
+  }
+  .axis-x {
+    grid-column: 2;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 4px;
+    font-size: 11px;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    font-weight: 700;
+  }
+  .axis-x span:first-child { color: var(--red); }
+  .axis-x span:last-child { color: var(--green); }
+  .axis-x .title { color: var(--plum); font-size: 13px; }
+
+  .fourbox {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    border-radius: 12px;
+    overflow: hidden;
+    border: 2px solid var(--plum);
+    cursor: crosshair;
+    user-select: none;
+    touch-action: none;
+  }
+  .zone {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 12px;
+    text-align: center;
+    pointer-events: none;
+  }
+  .zone .zname {
+    font-weight: 800;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: .08em;
+    margin-bottom: 4px;
+  }
+  .zone .zdesc {
+    font-size: 11px;
+    color: var(--muted);
+    line-height: 1.3;
+    font-style: italic;
+  }
+  .z-comfort { background: var(--green-soft); }
+  .z-comfort .zname { color: var(--green); }
+  .z-growth { background: var(--blue-soft); }
+  .z-growth .zname { color: var(--blue); }
+  .z-apathy { background: var(--orange-soft); }
+  .z-apathy .zname { color: var(--orange); }
+  .z-stress { background: var(--red-soft); }
+  .z-stress .zname { color: var(--red); }
+
+  .marker {
+    position: absolute;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: var(--plum);
+    border: 3px solid #fff;
+    transform: translate(-50%, -50%);
+    box-shadow: 0 3px 10px rgba(0,0,0,.25);
+    pointer-events: none;
+    transition: opacity .2s ease;
+    opacity: 0;
+    z-index: 3;
+  }
+  .marker.set { opacity: 1; }
+  .crosshair {
+    position: absolute;
+    background: rgba(59,27,62,.35);
+    pointer-events: none;
+    z-index: 2;
+    opacity: 0;
+    transition: opacity .2s ease;
+  }
+  .crosshair.set { opacity: 1; }
+  .ch-h { height: 1px; left: 0; right: 0; }
+  .ch-v { width: 1px; top: 0; bottom: 0; }
+
+  .readout {
+    margin-top: 16px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+  }
+  .readout .cell {
+    background: var(--bone);
+    border-radius: 10px;
+    padding: 12px;
+    text-align: center;
+    border: 1px solid var(--line);
+  }
+  .readout .cell .lbl {
+    font-size: 10px;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: var(--muted);
+    font-weight: 700;
+  }
+  .readout .cell .val {
+    font-size: 22px;
+    font-weight: 800;
+    color: var(--plum);
+    margin-top: 4px;
+  }
+  .readout .cell.zone-val .val { font-size: 15px; }
+
+  .submit-row {
+    margin-top: 32px;
+    text-align: center;
+  }
+  .btn {
+    display: inline-block;
+    background: var(--plum);
+    color: #fff;
+    border: none;
+    padding: 16px 36px;
+    font-family: inherit;
+    font-size: 15px;
+    font-weight: 700;
+    border-radius: 12px;
+    cursor: pointer;
+    letter-spacing: .02em;
+    box-shadow: 0 4px 14px rgba(59,27,62,.25);
+    transition: all .15s ease;
+  }
+  .btn:hover {
+    background: var(--plum-deep);
+    transform: translateY(-1px);
+  }
+  .btn.secondary {
+    background: transparent;
+    color: var(--plum);
+    border: 1px solid var(--line);
+    box-shadow: none;
+    margin-left: 8px;
+  }
+
+  .status-msg {
+    margin-top: 16px;
+    padding: 14px 18px;
+    border-radius: 10px;
+    font-size: 14px;
+    display: none;
+    text-align: center;
+  }
+  .status-msg.show { display: block; }
+  .status-msg.success { background: var(--green-soft); color: #2A6E36; border: 1px solid var(--green); }
+  .status-msg.error { background: var(--red-soft); color: #8B2A22; border: 1px solid var(--red); }
+  .status-msg.loading { background: var(--bone); color: var(--plum); border: 1px solid var(--line); }
+  .btn:disabled { opacity: .6; cursor: not-allowed; transform: none; }
+
+  .footer {
+    text-align: center;
+    color: var(--muted);
+    font-size: 12px;
+    margin-top: 40px;
+    letter-spacing: .04em;
+  }
+  .footer .gold-line {
+    width: 40px;
+    height: 2px;
+    background: var(--gold);
+    margin: 0 auto 12px;
+  }
+
+  /* Habits list */
+  .habits {
+    background: var(--bone);
+    border-left: 3px solid var(--gold);
+    padding: 14px 18px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    font-size: 13px;
+    color: var(--plum);
+  }
+  .habits strong { display: block; margin-bottom: 6px; color: var(--plum-deep); font-size: 12px; letter-spacing: .1em; text-transform: uppercase; }
+
+  @media (max-width: 620px) {
+    header h1 { font-size: 24px; }
+    .card { padding: 20px; }
+    .scale { grid-template-columns: repeat(5, 1fr); gap: 4px; }
+    .scale label { padding: 10px 2px; font-size: 11px; }
+    .fourbox-wrap { grid-template-columns: 32px 1fr; }
+    .zone .zname { font-size: 11px; }
+    .zone .zdesc { display: none; }
+    .readout { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="hero">
+    <div class="eyebrow">Flotek Group — Confidential Feedback</div>
+    <h1>Leadership &amp; Culture Survey</h1>
+    <p>Your honest answers help us lead better. This survey is anonymous — no one will know what you personally submitted. There are no right or wrong answers.</p>
+  </header>
+
+  <!-- SECTION 1 -->
+  <div class="card">
+    <h2><span class="num">01</span>About You</h2>
+    <p class="sub">A little context so we can spot patterns by team.</p>
+
+    <div class="q">
+      <span class="label">Which team are you in?</span>
+      <div class="chips" data-name="team" data-type="radio">
+        <label class="chip"><input type="radio" name="team" value="Sales">Sales</label>
+        <label class="chip"><input type="radio" name="team" value="Service Desk">Service Desk</label>
+        <label class="chip"><input type="radio" name="team" value="Service Delivery">Service Delivery</label>
+        <label class="chip"><input type="radio" name="team" value="Projects">Projects</label>
+        <label class="chip"><input type="radio" name="team" value="Ops">Ops</label>
+        <label class="chip"><input type="radio" name="team" value="Finance">Finance</label>
+        <label class="chip"><input type="radio" name="team" value="Other">Other</label>
+      </div>
+    </div>
+
+    <div class="q">
+      <span class="label">How long have you been at Flotek?</span>
+      <div class="chips" data-name="tenure" data-type="radio">
+        <label class="chip"><input type="radio" name="tenure" value="<6 months">Less than 6 months</label>
+        <label class="chip"><input type="radio" name="tenure" value="6-12 months">6–12 months</label>
+        <label class="chip"><input type="radio" name="tenure" value="1-3 years">1–3 years</label>
+        <label class="chip"><input type="radio" name="tenure" value="3+ years">3+ years</label>
+      </div>
+    </div>
+
+    <div class="q">
+      <span class="label">What is your role level?</span>
+      <div class="chips" data-name="role" data-type="radio">
+        <label class="chip"><input type="radio" name="role" value="Team member">Team member</label>
+        <label class="chip"><input type="radio" name="role" value="Team lead">Team lead</label>
+        <label class="chip"><input type="radio" name="role" value="Manager">Manager</label>
+        <label class="chip"><input type="radio" name="role" value="Director">Director</label>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 2 -->
+  <div class="card">
+    <h2><span class="num">02</span>Leadership Structure</h2>
+    <p class="sub">Do you know who's who?</p>
+
+    <div class="q">
+      <span class="label"><span class="badge">Q1</span>It is clear which director is responsible for my overall department.</span>
+      <div class="scale" data-name="q1"></div>
+    </div>
+
+    <div class="q">
+      <span class="label"><span class="badge">Q2</span>I know who to escalate to if my line manager is unavailable or if I disagree with a decision.</span>
+      <div class="scale" data-name="q2"></div>
+    </div>
+  </div>
+
+  <!-- SECTION 3 - FOUR BOX -->
+  <div class="card">
+    <h2><span class="num">03</span>Support vs Challenge — The Four Box Model</h2>
+    <p class="sub">Great leaders offer both <strong>support</strong> (guidance, backing, care) and <strong>challenge</strong> (stretch, high standards, pushing you). Where you sit on this grid tells us the leadership climate you experience day to day.</p>
+
+    <div class="q">
+      <span class="label"><span class="badge">Q3</span>Click on the grid where you feel your line manager places you most of the time.</span>
+      <div class="hint">Tap or click anywhere. You can move it. The dot's position sets your % Support and % Challenge automatically.</div>
+
+      <div class="fourbox-wrap">
+        <div class="axis-y">
+          <span>High</span>
+          <span class="title">Support</span>
+          <span>Low</span>
+        </div>
+        <div class="fourbox" id="fourbox">
+          <div class="zone z-comfort">
+            <div class="zname">Comfort Zone</div>
+            <div class="zdesc">Feels good, but progress stalls</div>
+          </div>
+          <div class="zone z-growth">
+            <div class="zname">Growth Zone</div>
+            <div class="zdesc">Pushed to grow with support to succeed</div>
+          </div>
+          <div class="zone z-apathy">
+            <div class="zname">Apathy Zone</div>
+            <div class="zdesc">Stuck and unmotivated</div>
+          </div>
+          <div class="zone z-stress">
+            <div class="zname">Stress Zone</div>
+            <div class="zdesc">Overwhelmed, at risk of burnout</div>
+          </div>
+          <div class="crosshair ch-h" id="chH"></div>
+          <div class="crosshair ch-v" id="chV"></div>
+          <div class="marker" id="marker"></div>
+        </div>
+        <div></div>
+        <div class="axis-x">
+          <span>Low</span>
+          <span class="title">Challenge</span>
+          <span>High</span>
+        </div>
+      </div>
+
+      <div class="readout">
+        <div class="cell"><div class="lbl">Support</div><div class="val" id="valSupport">—</div></div>
+        <div class="cell"><div class="lbl">Challenge</div><div class="val" id="valChallenge">—</div></div>
+        <div class="cell zone-val"><div class="lbl">Zone</div><div class="val" id="valZone">Tap the grid</div></div>
+      </div>
+    </div>
+
+    <div class="q" style="margin-top: 28px;">
+      <span class="label"><span class="badge">Q4</span>My manager gives me enough support when I'm working on something difficult or new.</span>
+      <div class="scale" data-name="q4"></div>
+    </div>
+    <div class="q">
+      <span class="label"><span class="badge">Q5</span>My manager challenges me to stretch beyond what feels comfortable.</span>
+      <div class="scale" data-name="q5"></div>
+    </div>
+    <div class="q">
+      <span class="label"><span class="badge">Q6</span>I feel both supported <em>and</em> pushed by my manager, not one or the other.</span>
+      <div class="scale" data-name="q6"></div>
+    </div>
+  </div>
+
+  <!-- SECTION 4 -->
+  <div class="card">
+    <h2><span class="num">04</span>Praise &amp; Recognition</h2>
+    <p class="sub">Recognition is a leadership behaviour, not a personality trait.</p>
+
+    <div class="q">
+      <span class="label"><span class="badge">Q7</span>My manager recognises good work openly and consistently.</span>
+      <div class="scale" data-name="q7"></div>
+    </div>
+    <div class="q">
+      <span class="label"><span class="badge">Q8</span>When I do something significant, my manager makes sure the wider team, peers, or leadership hear about it.</span>
+      <div class="scale" data-name="q8"></div>
+    </div>
+    <div class="q">
+      <span class="label"><span class="badge">Q9</span>I get feedback on what I'm doing well, not just on what needs improving.</span>
+      <div class="scale" data-name="q9"></div>
+    </div>
+  </div>
+
+  <!-- SECTION 5 - 5 Ps -->
+  <div class="card">
+    <h2><span class="num">05</span>The 5 P's</h2>
+    <p class="sub">How your manager leads across five core areas.</p>
+
+    <div class="q">
+      <span class="label"><span class="badge">Purpose</span>My manager clearly communicates why our work matters and where we're heading.</span>
+      <div class="scale" data-name="q10"></div>
+    </div>
+    <div class="q">
+      <span class="label"><span class="badge">People</span>My manager knows me as a person — my strengths, ambitions, and pressures.</span>
+      <div class="scale" data-name="q11"></div>
+    </div>
+    <div class="q">
+      <span class="label"><span class="badge">Performance</span>My manager sets clear expectations and holds people accountable fairly and consistently.</span>
+      <div class="scale" data-name="q12"></div>
+    </div>
+    <div class="q">
+      <span class="label"><span class="badge">Process</span>My manager improves how we work rather than tolerating broken or clunky processes.</span>
+      <div class="scale" data-name="q13"></div>
+    </div>
+    <div class="q">
+      <span class="label"><span class="badge">Progress</span>My manager helps me see how I'm developing and what my next step could look like.</span>
+      <div class="scale" data-name="q14"></div>
+    </div>
+  </div>
+
+  <!-- SECTION 6 -->
+  <div class="card">
+    <h2><span class="num">06</span>Leadership Style &amp; Psychological Safety</h2>
+    <p class="sub">How it feels to work under them.</p>
+
+    <div class="q">
+      <span class="label"><span class="badge">Q15</span>My manager makes decisions in a way I understand and can get behind.</span>
+      <div class="scale" data-name="q15"></div>
+    </div>
+    <div class="q">
+      <span class="label"><span class="badge">Q16</span>My manager listens as much as they speak.</span>
+      <div class="scale" data-name="q16"></div>
+    </div>
+    <div class="q">
+      <span class="label"><span class="badge">Q17</span>If I disagree with my manager, I feel safe raising it.</span>
+      <div class="scale" data-name="q17"></div>
+    </div>
+    <div class="q">
+      <span class="label"><span class="badge">Q18</span>In three words, how would you describe your manager's leadership style?</span>
+      <input type="text" name="q18" placeholder="e.g. calm, decisive, distant" />
+    </div>
+  </div>
+
+  <!-- SECTION 7 -->
+  <div class="card">
+    <h2><span class="num">07</span>Leadership Development &amp; the 7 Habits</h2>
+    <p class="sub">We've invested in leadership training. Has it filtered down?</p>
+
+    <div class="habits">
+      <strong>Stephen Covey — The 7 Habits of Highly Effective People</strong>
+      1. Be Proactive · 2. Begin With the End in Mind · 3. Put First Things First · 4. Think Win-Win · 5. Seek First to Understand, Then to Be Understood · 6. Synergise · 7. Sharpen the Saw
+    </div>
+
+    <div class="q">
+      <span class="label"><span class="badge">Q19</span>My manager demonstrates the principles of the 7 Habits in how they lead.</span>
+      <div class="scale" data-name="q19"></div>
+    </div>
+    <div class="q">
+      <span class="label"><span class="badge">Q20</span>I have seen my manager apply what they've learned from leadership training in a practical way.</span>
+      <div class="scale" data-name="q20"></div>
+    </div>
+    <div class="q">
+      <span class="label"><span class="badge">Q21</span>I have had access to leadership or personal development training myself.</span>
+      <div class="scale" data-name="q21"></div>
+    </div>
+  </div>
+
+  <!-- SECTION 8 -->
+  <div class="card">
+    <h2><span class="num">08</span>Access to Directors &amp; the CEO</h2>
+    <p class="sub">How the top of the business feels from where you sit.</p>
+
+    <div class="q">
+      <span class="label"><span class="badge">Q22</span>I feel safe raising an issue directly with a director if needed.</span>
+      <div class="scale" data-name="q22"></div>
+    </div>
+    <div class="q">
+      <span class="label"><span class="badge">Q23</span>I feel the CEO is approachable.</span>
+      <div class="scale" data-name="q23"></div>
+    </div>
+    <div class="q">
+      <span class="label"><span class="badge">Q24</span>When I speak up, my feedback is genuinely taken into consideration.</span>
+      <div class="scale" data-name="q24"></div>
+    </div>
+    <div class="q">
+      <span class="label"><span class="badge">Q25</span>I have seen visible changes at Flotek that came from staff feedback.</span>
+      <div class="scale" data-name="q25"></div>
+    </div>
+  </div>
+
+  <!-- SECTION 9 -->
+  <div class="card">
+    <h2><span class="num">09</span>Start · Stop · Continue</h2>
+    <p class="sub">The most useful feedback of all. Be specific.</p>
+
+    <div class="q">
+      <span class="label"><span class="badge">Start</span>What is one thing you'd like your manager to <strong>START</strong> doing?</span>
+      <textarea name="q26" placeholder="Something they don't currently do that would help you or the team…"></textarea>
+    </div>
+    <div class="q">
+      <span class="label"><span class="badge">Stop</span>What is one thing you'd like your manager to <strong>STOP</strong> doing?</span>
+      <textarea name="q27" placeholder="A habit or behaviour that's holding you or the team back…"></textarea>
+    </div>
+    <div class="q">
+      <span class="label"><span class="badge">Continue</span>What is one thing your manager does well that they should <strong>CONTINUE</strong>?</span>
+      <textarea name="q28" placeholder="Something they should absolutely keep doing…"></textarea>
+    </div>
+    <div class="q">
+      <span class="label"><span class="badge">Leaders</span>What is one thing you'd like the <strong>wider leadership team (directors / CEO)</strong> to start doing?</span>
+      <textarea name="q29" placeholder="A message for the top of the business…"></textarea>
+    </div>
+  </div>
+
+  <div class="submit-row">
+    <button class="btn" id="submitBtn">Submit feedback</button>
+    <button class="btn secondary" id="printBtn">Print / Save PDF</button>
+    <div class="status-msg" id="statusMsg"></div>
+  </div>
+
+  <div class="footer">
+    <div class="gold-line"></div>
+    Flotek Group · Confidential Leadership Survey · Responses are anonymous
+  </div>
+
+</div>
+
+<script>
+  // Build 1-5 scale rows
+  const scaleLabels = [
+    { n: 1, t: 'Strongly Disagree' },
+    { n: 2, t: 'Disagree' },
+    { n: 3, t: 'Neutral' },
+    { n: 4, t: 'Agree' },
+    { n: 5, t: 'Strongly Agree' },
+  ];
+  document.querySelectorAll('.scale').forEach(scale => {
+    const name = scale.dataset.name;
+    scaleLabels.forEach(s => {
+      const lbl = document.createElement('label');
+      lbl.innerHTML = `<span class="n">${s.n}</span><span>${s.t}</span>`;
+      const inp = document.createElement('input');
+      inp.type = 'radio';
+      inp.name = name;
+      inp.value = s.n;
+      lbl.appendChild(inp);
+      lbl.addEventListener('click', () => {
+        scale.querySelectorAll('label').forEach(l => l.classList.remove('checked'));
+        lbl.classList.add('checked');
+      });
+      scale.appendChild(lbl);
+    });
+  });
+
+  // Chip radios
+  document.querySelectorAll('.chips[data-type="radio"]').forEach(group => {
+    group.querySelectorAll('.chip').forEach(chip => {
+      chip.addEventListener('click', () => {
+        group.querySelectorAll('.chip').forEach(c => c.classList.remove('checked'));
+        chip.classList.add('checked');
+        const inp = chip.querySelector('input');
+        if (inp) inp.checked = true;
+      });
+    });
+  });
+
+  // Four-box interactive
+  const fourbox = document.getElementById('fourbox');
+  const marker  = document.getElementById('marker');
+  const chH     = document.getElementById('chH');
+  const chV     = document.getElementById('chV');
+  const valSup  = document.getElementById('valSupport');
+  const valCh   = document.getElementById('valChallenge');
+  const valZone = document.getElementById('valZone');
+
+  let fourboxData = { support: null, challenge: null, zone: null };
+
+  function zoneFor(supportPct, challengePct) {
+    const highS = supportPct >= 50;
+    const highC = challengePct >= 50;
+    if (highS && highC)   return { name: 'Growth Zone',  color: 'var(--blue)' };
+    if (highS && !highC)  return { name: 'Comfort Zone', color: 'var(--green)' };
+    if (!highS && highC)  return { name: 'Stress Zone',  color: 'var(--red)' };
+    return                       { name: 'Apathy Zone',  color: 'var(--orange)' };
+  }
+
+  function placeMarker(clientX, clientY) {
+    const rect = fourbox.getBoundingClientRect();
+    let x = clientX - rect.left;
+    let y = clientY - rect.top;
+    x = Math.max(0, Math.min(rect.width, x));
+    y = Math.max(0, Math.min(rect.height, y));
+
+    const challengePct = Math.round((x / rect.width) * 100);
+    const supportPct   = Math.round((1 - y / rect.height) * 100);
+
+    marker.style.left = x + 'px';
+    marker.style.top  = y + 'px';
+    marker.classList.add('set');
+
+    chH.style.top  = y + 'px';
+    chV.style.left = x + 'px';
+    chH.classList.add('set');
+    chV.classList.add('set');
+
+    const z = zoneFor(supportPct, challengePct);
+    valSup.textContent  = supportPct + '%';
+    valCh.textContent   = challengePct + '%';
+    valZone.textContent = z.name;
+    valZone.style.color = z.color;
+
+    fourboxData = { support: supportPct, challenge: challengePct, zone: z.name };
+  }
+
+  fourbox.addEventListener('click', e => placeMarker(e.clientX, e.clientY));
+  fourbox.addEventListener('touchstart', e => {
+    if (e.touches[0]) placeMarker(e.touches[0].clientX, e.touches[0].clientY);
+  }, { passive: true });
+  fourbox.addEventListener('touchmove', e => {
+    if (e.touches[0]) placeMarker(e.touches[0].clientX, e.touches[0].clientY);
+    e.preventDefault();
+  }, { passive: false });
+
+  // ========================================================================
+  // CONFIG — paste your Web3Forms access key here
+  // Get one free at https://web3forms.com (uses same account as MSPeer)
+  // ========================================================================
+  const WEB3FORMS_ACCESS_KEY = '54e3c33a-11c7-463a-9620-03ab2824cf51';
+  const RECIPIENT_LABEL      = 'Jay Ball'; // shown in email subject/body
+  // ========================================================================
+
+  const submitBtn = document.getElementById('submitBtn');
+  const statusMsg = document.getElementById('statusMsg');
+
+  function setStatus(type, text) {
+    statusMsg.className = 'status-msg show ' + type;
+    statusMsg.textContent = text;
+  }
+
+  function collectAnswers() {
+    const data = { fourbox: fourboxData, answers: {} };
+    document.querySelectorAll('input, textarea').forEach(el => {
+      if (el.type === 'radio' && el.checked) data.answers[el.name] = el.value;
+      else if (el.type === 'text' || el.tagName === 'TEXTAREA') {
+        if (el.value.trim()) data.answers[el.name] = el.value.trim();
+      }
+    });
+    return data;
+  }
+
+  async function generatePdf() {
+    // Clone the wrap and strip interactive controls for a clean printout
+    const source = document.querySelector('.wrap').cloneNode(true);
+    source.querySelector('.submit-row')?.remove();
+    // Force checked-state visual to survive in the PDF
+    source.querySelectorAll('input[type=radio]').forEach(inp => {
+      if (inp.checked) inp.setAttribute('checked', 'checked');
+    });
+    // Preserve text input values
+    document.querySelectorAll('input[type=text], textarea').forEach(el => {
+      const clone = source.querySelector(`[name="${el.name}"]`);
+      if (clone) {
+        if (clone.tagName === 'TEXTAREA') clone.textContent = el.value;
+        else clone.setAttribute('value', el.value);
+      }
+    });
+
+    const opt = {
+      margin: 10,
+      filename: `flotek_survey_${Date.now()}.pdf`,
+      image: { type: 'jpeg', quality: 0.95 },
+      html2canvas: { scale: 2, useCORS: true, backgroundColor: '#F7F4EE' },
+      jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+    };
+    return await html2pdf().set(opt).from(source).outputPdf('blob');
+  }
+
+  submitBtn.addEventListener('click', async () => {
+    if (WEB3FORMS_ACCESS_KEY === 'YOUR_ACCESS_KEY_HERE') {
+      setStatus('error', 'Web3Forms access key not configured. Open the HTML and paste your key at the top of the script.');
+      return;
+    }
+
+    submitBtn.disabled = true;
+    setStatus('loading', 'Generating PDF and sending…');
+
+    try {
+      const data = collectAnswers();
+      const pdfBlob = await generatePdf();
+
+      // Build readable summary for the email body
+      const a = data.answers;
+      const fb = data.fourbox;
+      const summary =
+        `Team: ${a.team || '—'}\n` +
+        `Tenure: ${a.tenure || '—'}\n` +
+        `Role: ${a.role || '—'}\n\n` +
+        `--- Four Box ---\n` +
+        `Support: ${fb.support ?? '—'}%\n` +
+        `Challenge: ${fb.challenge ?? '—'}%\n` +
+        `Zone: ${fb.zone || '—'}\n\n` +
+        `--- Ratings (1-5) ---\n` +
+        Object.entries(a).filter(([k]) => /^q\d+$/.test(k) && !isNaN(a[k])).map(([k,v]) => `${k}: ${v}`).join('\n') +
+        `\n\n--- Free text ---\n` +
+        `Style: ${a.q18 || '—'}\n\n` +
+        `START: ${a.q26 || '—'}\n\n` +
+        `STOP: ${a.q27 || '—'}\n\n` +
+        `CONTINUE: ${a.q28 || '—'}\n\n` +
+        `To leadership: ${a.q29 || '—'}`;
+
+      const fd = new FormData();
+      fd.append('access_key', WEB3FORMS_ACCESS_KEY);
+      fd.append('subject', `Flotek Leadership Survey — ${a.team || 'Unknown team'} — ${new Date().toLocaleDateString('en-GB')}`);
+      fd.append('from_name', 'Flotek Leadership Survey');
+      fd.append('message', summary);
+      fd.append('attachment', pdfBlob, `flotek_survey_${Date.now()}.pdf`);
+
+      const res = await fetch('https://api.web3forms.com/submit', { method: 'POST', body: fd });
+      const json = await res.json();
+
+      if (json.success) {
+        setStatus('success', 'Thank you — your feedback has been sent anonymously. You can close this page.');
+        submitBtn.textContent = 'Submitted';
+      } else {
+        throw new Error(json.message || 'Submission failed');
+      }
+    } catch (err) {
+      console.error(err);
+      setStatus('error', 'Something went wrong sending your response. Please try again, or hit Print to save a PDF and send manually.');
+      submitBtn.disabled = false;
+    }
+  });
+
+  document.getElementById('printBtn').addEventListener('click', () => window.print());
+</script>
+</body>
+</html>
